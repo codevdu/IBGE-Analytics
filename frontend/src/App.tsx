@@ -1,5 +1,17 @@
+import { useState, useEffect } from 'react'
+import { getDashboard } from './api/index'
 
 function App() {
+  const [filters, setFilters] = useState({
+    indicator: 'populacao',
+    region: 'Brasil'
+  })
+  
+  const [dados, setDados] = useState(null)
+
+  useEffect(() => {
+    getDashboard(filters).then(setDados)
+  }, [filters])
 
   return (
     <>
