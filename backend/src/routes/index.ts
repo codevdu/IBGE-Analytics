@@ -1,8 +1,10 @@
 import { Router } from "express"
-// importar as rotas e adicionar abaixo 
+import { statesRoutes } from "./states-routes"
+import { dashboardRoutes } from "./dashboard-routes" 
 
 const routes = Router()
-routes.use("/states", ) // chamar rota após a vírgula "statesRoutes"
-routes.use("/dashboard",)
+
+routes.use("/states", statesRoutes)
+routes.use("/dashboard", dashboardRoutes)
 
 export { routes }
