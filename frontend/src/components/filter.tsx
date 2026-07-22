@@ -1,0 +1,1 @@
+// criar após o componente dropdown. Facilita manutenção e a criação de novos filtros.
