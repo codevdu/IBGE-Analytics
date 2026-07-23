@@ -1,5 +1,22 @@
+import { Dropdown } from "./dropdown";
+
 export function Filter() {
-  return (
+  
+  const indicatorOptions = [
+  { value: "populacao", label: "População" },
+  { value: "densidade", label: "Densidade demográfica" },
+];
+
+const regionOptions = [
+  { value: "brasil", label: "Brasil" },
+  { value: "norte", label: "Norte" },
+  { value: "nordeste", label: "Nordeste" },
+  { value: "centro-oeste", label: "Centro-Oeste" },
+  { value: "sudeste", label: "Sudeste" },
+  { value: "sul", label: "Sul" },
+];
+  
+return (
     <section className="w-full rounded-2xl border border-white/10 bg-slate-900/90 p-6 shadow-xl">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-white">Filtros</h2>
@@ -10,50 +27,22 @@ export function Filter() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <div>
-          <label
-            htmlFor="indicador"
-            className="mb-2 block text-sm font-medium text-slate-200"
-          >
-            Indicador
-          </label>
-
-          <select
+        <Dropdown
             id="indicador"
-            name="indicador"
-            defaultValue="populacao"
-            className="h-12 w-full cursor-pointer rounded-xl border border-white/10 bg-slate-800 px-4 text-sm text-white outline-none transition hover:border-blue-400/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-          >
-            <option value="populacao">População</option>
+            label="Indicador"
+            value="populacao"
+            options={indicatorOptions}
+            onChange={() => {}}
+        />
 
-            <option value="densidade">
-              Densidade demográfica
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label
-            htmlFor="regiao"
-            className="mb-2 block text-sm font-medium text-slate-200"
-          >
-            Região
-          </label>
-
-          <select
+        <Dropdown
             id="regiao"
-            name="regiao"
-            defaultValue="brasil"
-            className="h-12 w-full cursor-pointer rounded-xl border border-white/10 bg-slate-800 px-4 text-sm text-white outline-none transition hover:border-blue-400/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"
-          >
-            <option value="brasil">Brasil</option>
-            <option value="norte">Norte</option>
-            <option value="nordeste">Nordeste</option>
-            <option value="centro-oeste">Centro-Oeste</option>
-            <option value="sudeste">Sudeste</option>
-            <option value="sul">Sul</option>
-          </select>
-        </div>
+            label="Região"
+            value="brasil"
+            options={regionOptions}
+            onChange={() => {}}
+        />
+                
       </div>
     </section>
   );
