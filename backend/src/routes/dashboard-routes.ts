@@ -1,24 +1,34 @@
 import { Router, Request, Response } from "express"
 import axios from "axios"
+import mockDashboard from "../../../dados/amostra_grafico.json"
 
 const dashboardRoutes = Router()
 
 dashboardRoutes.get("/", async (req: Request, res: Response) => {
-  const { indicator, region } = req.query
-
-  if (!indicator || !region) {
+  const USE_MOCK = process.env.USE_MOCK
+  
+  const { indicador, regiao } = req.query
+  
+  if (!indicador || !regiao) {
     return res.status(400).json({
-      message: "Os parâmetros 'indicador' e 'região' são obrigatórios na busca."
+      message: "Os parâmetros 'indicador' e 'regiao' são obrigatórios na busca."
     })
   }
 
+  // Nível 1: responde com a amostra de fig.to_json() entregue pela equipe de Dados,
+  // sem depender do FastAPI estar no ar. Ativa com USE_MOCK=true no .env.
+  if (USE_MOCK) {
+    return res.json(mockDashboard)
+  }
+  
+  console.log(USE_MOCK)
   try {
     const pyServiceUrl = process.env.PY_SERVICE_URL || "http://localhost:8000"
 
     const { data } = await axios.get(`${pyServiceUrl}/chart`, {
       params: {
-        indicator: String(indicator),
-        region: String(region)
+        indicador: String(indicador),
+        regiao: String(regiao)
       }
     })
 
@@ -31,14 +41,17 @@ dashboardRoutes.get("/", async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (error: any) {
-    if (error.response && error.response.status === 404) {
+    if (error.response?.status === 404) {
       return res.status(404).json({
         message: "Não foram encontrados dados para essa região/indicador.",
         emptyData: true
       })
     }
 
-    throw new Error(`Erro ao conectar com o serviço Python: ${error.message}`)
+    return res.status(500).json({
+      message: "Erro ao conectar com o serviço Python.",
+      detail: error.message
+    })
   }
 })
 

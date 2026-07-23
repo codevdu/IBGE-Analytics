@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { IBGEStateResponse, StateDto } from '../interfaces/ibgeStade.dto'
 
-const BASE = 'https://servicodados.ibge.gov.br/api/v1/localidades'
+const BASE = process.env.IBGE_SERVICE_URL || 'https://servicodados.ibge.gov.br/api/v1/localidades'
 
 
 export async function fetchStates(): Promise<StateDto[]> {
