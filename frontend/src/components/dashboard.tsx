@@ -6,18 +6,27 @@ export function Dashboard() {
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-10">
       <div className="mx-auto w-full max-w-6xl">
-        <header className="mb-8">
-          <p className="mb-2 text-sm font-medium uppercase tracking-widest text-blue-400">
-            Painel de dados
-          </p>
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p className="mb-2 text-sm font-medium uppercase tracking-widest text-blue-400">
+                Painel de dados
+                </p>
 
-          <h1 className="text-3xl font-bold text-white">
-            IBGE Analytics
-          </h1>
+                <h1 className="text-3xl font-bold text-white sm:text-4xl">
+                IBGE Analytics
+                </h1>
 
-          <p className="mt-2 text-slate-400">
-            Visualize indicadores populacionais das regiões brasileiras.
-          </p>
+                <p className="mt-2 max-w-2xl text-slate-400">
+                Visualize indicadores populacionais das regiões brasileiras de forma
+                simples e organizada.
+                </p>
+            </div>
+
+            <div className="w-fit rounded-full border border-blue-400/20 bg-blue-400/10 px-4 py-2">
+                <span className="text-sm font-medium text-blue-300">
+                Dados do IBGE
+                </span>
+            </div>
         </header>
 
         <Filter />
@@ -26,16 +35,19 @@ export function Dashboard() {
             <KpiCard
                 title="População total"
                 value="203 milhões"
+                description="Estimativa nacional"
             />
 
             <KpiCard
                 title="Região selecionada"
                 value="Brasil"
+                description="Abrangência da consulta"
             />
 
             <KpiCard
                 title="Indicador atual"
                 value="População"
+                description="Métrica exibida no painel"
             />
         </section>
 
