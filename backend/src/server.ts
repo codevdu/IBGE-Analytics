@@ -1,11 +1,27 @@
 import express, { Request, Response, NextFunction } from "express"
+import cors from "cors"
+import dotenv from "dotenv"
+dotenv.config()
 
 import { routes } from "./routes"
 
-//adicionar CORS
 
-const PORT = 3333
+const PORT = process.env.PORT || 3333
 const app = express()
+
+const allowedOrigins = process.env.FRONT_URL ||  "http://localhost:5173"
+
+app.use(cors({
+    origin:(origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+    methods: "*",
+    credentials: true
+}))
 
 app.use(express.json())
 app.use(routes)
