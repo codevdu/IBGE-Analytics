@@ -1,11 +1,7 @@
+import { Dashboard } from "./components/dashboard";
 
 function App() {
-
-  return (
-    <>
-      <h1 className='text-2xl'>IBGE Analytics</h1>
-    </>
-  )
+  return <Dashboard />;
 }
 
-export default App
+export default App;
