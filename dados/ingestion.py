@@ -40,6 +40,15 @@ if __name__ == "__main__":
     print("\nResultado da requisição:")
     print(json.dumps(sample_data, indent=2, ensure_ascii=False))
 """
+_CACHE = {}
+def limpar_cache():
+    """
+    Limpa o cache atual.
+    """
+    global _CACHE
+    _CACHE.clear()
+    print("Cache limpo com sucesso!")
+
 
 def fetch_indicator(aggregate, variable, period):
     """
@@ -49,7 +58,11 @@ def fetch_indicator(aggregate, variable, period):
     url = (f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate}"
            f"/periodos/{period}/variaveis/{variable}?localidades=N3[all]")
     
-    print(f"Buscando dados na URL: {url}")
+    if url in _CACHE:
+        print(f"[CACHE] Retornando dados salvos para: {aggregate}/{variable}")
+        return _CACHE[url]
+    
+    print(f" [API] Buscando dados na URL: {url}")
     
     try:
         # Adicionado timeout de 30 segundos
@@ -57,9 +70,12 @@ def fetch_indicator(aggregate, variable, period):
         
         # Levanta um erro se o status HTTP não for 200 (OK)
         response.raise_for_status() 
-        
-        return response.json()
-        
+        dados = response.json()
+
+        # Salva o resultado no cache antes de retornar
+        _CACHE[url] = dados
+        return dados
+                
     except requests.exceptions.Timeout:
         print("Erro: O tempo limite da requisição (timeout) estourou.")
         return None
@@ -72,12 +88,20 @@ def fetch_states():
     Traz a lista de todos os estados com região de cada UF.
     """
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
-    print(f"Buscando lista de estados na URL: {url}")
+
+    if url in _CACHE:
+        print(f"[CACHE] Retornando lista de estados salva.")
+        return _CACHE[url]
+        
+    print(f"[API] Buscando lista de estados na URL: {url}")
     
     try:
         response = requests.get(url, timeout=30)
         response.raise_for_status()
-        return response.json()
+        dados = response.json()
+        
+        _CACHE[url] = dados
+        return dados
         
     except requests.exceptions.Timeout:
         print("Erro: O tempo limite (timeout) estourou ao buscar os estados.")
@@ -90,24 +114,24 @@ def fetch_states():
 # TESTE DO CARTÃO (NÍVEL 2 - INGESTÃO COMPLETA)
 # ==========================================
 if __name__ == "__main__":
-    print("Iniciando teste de ingestão COMPLETA e tratamento de erros...\n")
+    print("Iniciando teste de Ingestão com CACHE...\n")
     
-    # estando População (Agregado 6579, Variável 9324, Último ano)
-    print("--- Testando População ---")
-    dados_populacao = fetch_indicator("6579", "9324", "-1")
-    if dados_populacao:
-        print("✅ Sucesso! Dados de população dos 27 estados retornados.\n")
-        
-    # Testando Densidade (Agregado 1298, Variável 614, Ano de 2010)
-    print("--- Testando Densidade Demográfica ---")
-    dados_densidade = fetch_indicator("1298", "614", "2000")
-    if dados_densidade:
-        print("✅ Sucesso! Dados de densidade retornados.\n")
-        
-    # Testando Estados / Regiões
-    print("--- Testando Estados ---")
-    dados_estados = fetch_states()
-    if dados_estados:
-        # imprime apenas o primeiro estado da lista
-        print("✅ Sucesso! Lista de estados retornada. Exemplo do 1º estado:")
-        print(json.dumps(dados_estados[0], indent=2, ensure_ascii=False))
+    print("--- 1ª CHAMADA (Deve ir na API) ---")
+    dados1 = fetch_indicator("6579", "9324", "-1")
+    
+    print("\n--- 2ª CHAMADA (Deve vir do CACHE, super rápido!) ---")
+    dados2 = fetch_indicator("6579", "9324", "-1")
+
+    print("\n--- 🕵️ ESPIANDO DENTRO DO CACHE ---")
+    print(f"Quantidade de itens salvos na memória: {len(_CACHE)}")
+    
+    # Vamos listar todas as URLs que estão guardadas na gaveta
+    print("\n--- 🕵️ CONTEÚDO REAL DO CACHE ---")
+    for url_salva, dados_salvos in _CACHE.items():
+        print(f"URL: {url_salva}")
+        print(f"Tipo do dado guardado: {type(dados_salvos)}")
+        # Se quiser ver uma amostra do JSON salvo, descomente a linha abaixo:
+        # print(dados_salvos)
+
+    print("\n--- TESTANDO ESTRATÉGIA DE REFRESH ---")
+    dados3 = fetch_indicator("6579", "9324", "-1")
