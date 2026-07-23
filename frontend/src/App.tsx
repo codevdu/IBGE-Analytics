@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getDashboard } from './api/index'
+import { Dashboard } from './components/dashboard'
 
 function App() {
   const [filters, setFilters] = useState({
@@ -16,8 +17,9 @@ function App() {
   return (
     <>
       <h1 className='text-2xl'>IBGE Analytics</h1>
+      <Dashboard /> 
     </>
   )
 }
 
-export default App
+export default App;
