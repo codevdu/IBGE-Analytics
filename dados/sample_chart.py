@@ -31,7 +31,7 @@ def generate_sample_chart():
         # Pega o único valor existente da série
         valor = list(estado["serie"].values())[0]
 
-        if valor == "...":
+        if valor in ("...", "-"):
             continue
 
         registros.append({

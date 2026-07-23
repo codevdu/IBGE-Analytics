@@ -40,6 +40,15 @@ if __name__ == "__main__":
     print("\nResultado da requisição:")
     print(json.dumps(sample_data, indent=2, ensure_ascii=False))
 """
+"""
+ ==========================================
+ CACHE EM MEMÓRIA
+ ==========================================
+ ESTRATÉGIA DE CACHE:
+ O cache vive durante o ciclo de vida do processo. 
+ Em produção, ele reinicia junto com o servidor Uvicorn.
+ Sem rota de refresh neste nível (poderá ser exposto futuramente em uma rota /refresh-cache no FastAPI).
+"""
 _CACHE = {}
 def limpar_cache():
     """
