@@ -2,25 +2,7 @@
 import { useState, useEffect } from "react"
 import Plot from "react-plotly.js"
 import axios from "axios"
-
-type DashboardResponse = {
-  figura: {
-    data: any
-    layout: any
-  }
-  kpis: {
-    total: number
-    maior: { 
-      nome: string; 
-      valor: number 
-    }
-    menor: { 
-      nome: string; 
-      valor: number 
-    }
-    media: number
-  }
-}
+import type { DashboardResponse } from "../types/dashboard"
 
 type DashboardProps = {
   indicador: string
