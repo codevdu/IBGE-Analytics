@@ -1,29 +1,43 @@
+// components/dashboard.tsx
+import { useState, useEffect } from "react"
+import Plot from "react-plotly.js"
+import axios from "axios"
+import type { DashboardResponse } from "../types/dashboard"
 
-import { useState } from 'react';
-
-function DropdownFiltro({ filtro, setFiltro }) {
-  return (
-    <select value={filtro} onChange={(e) => setFiltro(e.target.value)}>
-      <option value="populacao">População</option>
-      <option value="densidade">Densidade Demográfica</option>
-    </select>
-  );
-
-
-export default function Dashboard() {
-  const [filtro, setFiltro] = useState('populacao');
-
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>Dashboard IBGE</h1>
-
-      <DropdownFiltro filtro={filtro} setFiltro={setFiltro} />
-
-      {/* placeholder da regiao, vai ativar no nivel 3 */}
-      <select disabled>
-        <option>Regiao (em breve)</option>
-      </select>
-    </div>
-  );
+type DashboardProps = {
+  indicador: string
+  regiao: string
 }
+
+export function Dashboard({ 
+  indicador, 
+  regiao 
+}: DashboardProps) {
+  const [data, setData] = useState<DashboardResponse | null>(null)
+
+  useEffect(() => {
+    async function fetchDashboard() {
+      try {
+        const { data } = await axios.get<DashboardResponse>(
+          `http://localhost:3333/api/dashboard`,
+          { params: { 
+            indicador, 
+            regiao 
+          } 
+        }
+        )
+        setData(data)
+      } catch (error) {
+        console.error("Erro ao buscar dashboard:", error)
+      }
+    }
+
+    fetchDashboard()
+  }, [indicador, regiao])
+
+  if (!data) {
+    return <p>Selecione um recorte…</p>
+  }
+
+  return <Plot data={data.figura.data} layout={data.figura.layout} />
 }
