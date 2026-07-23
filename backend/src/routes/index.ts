@@ -4,7 +4,7 @@ import { dashboardRoutes } from "./dashboard-routes"
 
 const routes = Router()
 
-routes.use("/states", statesRoutes)
-routes.use("/dashboard", dashboardRoutes)
+routes.use("/api/states", statesRoutes)
+routes.use("/api/dashboard", dashboardRoutes)
 
 export { routes }
