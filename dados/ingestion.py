@@ -111,7 +111,7 @@ def fetch_states():
         return None
 
 # ==========================================
-# TESTE DO CARTÃO (NÍVEL 2 - INGESTÃO COMPLETA)
+# INGESTÃO COMPLETA
 # ==========================================
 if __name__ == "__main__":
     print("Iniciando teste de Ingestão com CACHE...\n")
@@ -122,16 +122,23 @@ if __name__ == "__main__":
     print("\n--- 2ª CHAMADA (Deve vir do CACHE, super rápido!) ---")
     dados2 = fetch_indicator("6579", "9324", "-1")
 
+    # --- TESTANDO DENSIDADE  ---
+    print("\n--- 3ª CHAMADA: Densidade Demográfica (Deve ir na API) ---")
+    dados_den1 = fetch_indicator("1298", "614", "2010")
+
+    print("\n--- 4ª CHAMADA: Densidade Demográfica (Deve vir do CACHE) ---")
+    dados_den2 = fetch_indicator("1298", "614", "2010")
+
     print("\n--- 🕵️ ESPIANDO DENTRO DO CACHE ---")
     print(f"Quantidade de itens salvos na memória: {len(_CACHE)}")
     
-    # Vamos listar todas as URLs que estão guardadas na gaveta
+    # lista todas as URLs que estão guardadas na gaveta
     print("\n--- 🕵️ CONTEÚDO REAL DO CACHE ---")
     for url_salva, dados_salvos in _CACHE.items():
         print(f"URL: {url_salva}")
         print(f"Tipo do dado guardado: {type(dados_salvos)}")
-        # Se quiser ver uma amostra do JSON salvo, descomente a linha abaixo:
-        # print(dados_salvos)
+        print(dados_salvos)
 
     print("\n--- TESTANDO ESTRATÉGIA DE REFRESH ---")
+    limpar_cache()
     dados3 = fetch_indicator("6579", "9324", "-1")
