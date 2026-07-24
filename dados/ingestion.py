@@ -1,6 +1,25 @@
 import requests
 import json
 
+# ==========================================
+# CONFIGURAÇÕES DE INDICADORES
+# ==========================================
+# Dicionário que centraliza os códigos do IBGE para facilitar a manutenção.
+INDICATORS = {
+    "population": {"aggregate": "6579", "variable": "9324", "period": "-1"},
+    "density": {"aggregate": "1298", "variable": "614", "period": "2010"},
+}
+
+def fetch_population():
+    """Atalho para buscar a população usando o dicionário."""
+    p = INDICATORS["population"]
+    return fetch_indicator(p["aggregate"], p["variable"], p["period"])
+
+def fetch_density():
+    """Atalho para buscar a densidade usando o dicionário."""
+    p = INDICATORS["density"]
+    return fetch_indicator(p["aggregate"], p["variable"], p["period"])
+
 #Codigo antigo do cartão de ingestão, que puxa apenas uma amostra fixa de 4 estados.
 """
 def fetch_sample_indicator(aggregate, variable, period):
