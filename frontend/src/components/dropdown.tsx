@@ -40,7 +40,7 @@ export function Dropdown({
     <div>
       <label
         htmlFor={id}
-        className="mb-2 block text-sm font-semibold text-slate-700"
+        className="sm:mb-2 mb-1 block text-sm font-semibold text-slate-700"
       >
         {label}
       </label>
@@ -48,7 +48,7 @@ export function Dropdown({
       <div className="relative">
 
         {icon && (
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-blue-100 p-2">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-blue-100 p-1 sm:1.5">
             {icon}
           </div>
         )}
@@ -57,7 +57,7 @@ export function Dropdown({
           id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-14 w-full appearance-none rounded-xl border border-slate-300 bg-white pl-16 pr-12 text-slate-700 outline-none transition hover:border-blue-500 focus:border-blue-500"
+          className="sm:h-10 h-10 text-sm w-full appearance-none rounded-md border border-slate-300 bg-white pl-16 pr-12 text-slate-700 outline-none transition hover:border-blue-500 focus:border-blue-500"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
