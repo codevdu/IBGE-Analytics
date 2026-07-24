@@ -9,6 +9,10 @@ export const swaggerDocument = {
     {
       url: "http://localhost:3333",
       description: "Servidor Local"
+    },
+    {
+      url: `${process.env.BACKEND_URL}`,
+      description: "Servidor Na Nuvem"
     }
   ],
   paths: {
