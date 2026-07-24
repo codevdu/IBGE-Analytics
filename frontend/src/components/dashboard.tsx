@@ -19,15 +19,14 @@ export function Dashboard({ indicador, regiao }: DashboardProps) {
     async function fetchDashboard() {
       try {
         const { data } = await axios.get<DashboardResponse>(
-          `http://localhost:3333/api/dashboard`,
-          {
-            params: {
-              indicador,
-              regiao,
-            },
-          },
-        );
-        setData(data);
+          `${import.meta.env.VITE_BACKEND_SERVICE_URL}/api/dashboard`,
+          { params: { 
+            indicador, 
+            regiao 
+          } 
+        }
+        )
+        setData(data)
       } catch (error) {
         console.error("Erro ao buscar dashboard:", error);
       }
