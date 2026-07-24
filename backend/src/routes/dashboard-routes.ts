@@ -1,14 +1,20 @@
 import { Router, Request, Response } from "express"
 import axios from "axios"
-import mockDashboard from "../../../dados/amostra_grafico.json"
+import mockDensidade from "../../../dados/amostra_densidade.json"
+import mockPopulacao from "../../../dados/amostra_populacao.json"
 
 const dashboardRoutes = Router()
 
+const MOCKS: Record<string, unknown> = {
+  populacao: mockPopulacao,
+  densidade: mockDensidade,
+}
+
 dashboardRoutes.get("/", async (req: Request, res: Response) => {
-  const USE_MOCK = process.env.USE_MOCK
-  
+  const USE_MOCK = process.env.USE_MOCK === "true"
+
   const { indicador, regiao } = req.query
-  
+
   if (!indicador || !regiao) {
     return res.status(400).json({
       message: "Os parâmetros 'indicador' e 'regiao' são obrigatórios na busca."
@@ -16,12 +22,20 @@ dashboardRoutes.get("/", async (req: Request, res: Response) => {
   }
 
   // Nível 1: responde com a amostra de fig.to_json() entregue pela equipe de Dados,
-  // sem depender do FastAPI estar no ar. Ativa com USE_MOCK=true no .env.
+  // escolhendo o mock certo pelo 'indicador'. Ativa com USE_MOCK=true no .env.
   if (USE_MOCK) {
-    return res.json(mockDashboard)
+    const mock = MOCKS[String(indicador)]
+
+    if (!mock) {
+      return res.status(404).json({
+        message: `Nenhum mock encontrado para o indicador '${indicador}'.`,
+        emptyData: true
+      })
+    }
+
+    return res.json(mock)
   }
-  
-  console.log(USE_MOCK)
+
   try {
     const pyServiceUrl = process.env.PY_SERVICE_URL || "http://localhost:8000"
 

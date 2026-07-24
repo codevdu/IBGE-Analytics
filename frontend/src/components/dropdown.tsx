@@ -1,3 +1,4 @@
+// components/dropdown.tsx
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -13,19 +14,6 @@ interface DropdownProps {
   options: DropdownOption[];
   onChange: (newValue: string) => void;
   icon?: ReactNode;
-}
-
-interface DropdownOption {
-  value: string;
-  label: string;
-}
-
-interface DropdownProps {
-  id: string;
-  label: string;
-  value: string;
-  options: DropdownOption[];
-  onChange: (newValue: string) => void;
 }
 
 export function Dropdown({
@@ -46,7 +34,6 @@ export function Dropdown({
       </label>
 
       <div className="relative">
-
         {icon && (
           <div className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-blue-100 p-1 sm:1.5">
             {icon}

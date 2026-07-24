@@ -59,7 +59,7 @@ export default function DashboardStatistics() {
               key={card.title}
               className={`
                 flex 
-                min-h-[90px] 
+                min-h-22.5 
                 items-center 
                 gap-2 
                 rounded-md 
@@ -73,7 +73,7 @@ export default function DashboardStatistics() {
                 transition-all 
                 duration-300 
                 hover:shadow-md 
-                sm:min-h-[90px] 
+                sm:min-h-22.5 
                 sm:gap-4 
                 sm:p-2
                 lg:px-7
