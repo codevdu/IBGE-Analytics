@@ -31,4 +31,7 @@ app.use((error: any, request: Request, response: Response, _: NextFunction) => {
   response.status(500).json({ message: error.message })
 })
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT} - http://localhost:3333/docs`))
+app.listen(PORT, () => console.log(`
+  🚀 Server running on: http://localhost:${PORT}
+  📚 Documentation at: http://localhost:${PORT}/docs
+`))
