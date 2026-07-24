@@ -1,22 +1,27 @@
 import { useState } from 'react'
 import { Dashboard } from './components/dashboard'
-import { Dropdown } from './components/dropdown'
+// import { Dropdown } from './components/dropdown'
 
 function App() {
-  const [filters, setFilters] = useState({
+  const [filters] = useState({
     indicador: 'populacao',
     regiao: 'Brasil'
   })
+  // COMENTANDO PARA TESTE
+  // NAO REMOVER SEM AUTORIZAÇÃO 
 
-  function handleChange(campo: 'indicador' | 'regiao', valor: string) {
-    setFilters((prev) => ({ ...prev, [campo]: valor }))
-  }
-
+  // function handleChange(campo: 'indicador' | 'regiao', valor: string) {
+  //   setFilters((prev) => ({ ...prev, [campo]: valor }))
+  // }
+  
   return (
-    <>
-      <h1 className='text-2xl'>IBGE Analytics</h1>
+    <div className='min-h-screen flex flex-col'>
+        <Dashboard
+          indicador={filters.indicador}
+          regiao={filters.regiao}
+        />
 
-      <Dropdown
+      {/* <Dropdown
         id="indicador"
         label="Indicador"
         value={filters.indicador}
@@ -43,13 +48,9 @@ function App() {
           { value: 'CO', label: 'Centro-Oeste' }
         ]}
         onChange={(valor) => handleChange('regiao', valor)}
-      />
+      /> */}
 
-      <Dashboard
-        indicador={filters.indicador}
-        regiao={filters.regiao}
-      />
-    </>
+    </div>
   )
 }
 
