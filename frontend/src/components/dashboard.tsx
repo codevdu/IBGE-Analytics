@@ -5,6 +5,7 @@ import axios from "axios"
 import type { DashboardResponse } from "../types/dashboard"
 import DashboardHeader from "../dashboard/DashboardHeader"
 import DashboardHero from "../dashboard/DashboardHero"
+import DashboardStatistics from "../dashboard/DashboardStatistics"
 
 type DashboardProps = {
   indicador: string
@@ -45,6 +46,7 @@ export function Dashboard({
     <div className="bg-slate-50 text-slate-900">
       <DashboardHeader />
       <DashboardHero />
+      <DashboardStatistics />
       <Plot data={data.figura.data} layout={data.figura.layout} />
     </div>
   )

@@ -15,7 +15,7 @@ export default function DashboardHero() {
   }
 
   return (
-    <section className="w-full p-1 sm:p-7">
+    <section className="w-full p-1 sm:p-5">
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Indicador */}
@@ -56,7 +56,7 @@ export default function DashboardHero() {
 
           {/* Sobre o recorte */}
 
-          <div className="rounded-xl bg-blue-50 p-5">
+          <div className="rounded-xl bg-blue-50 p-3">
             <div className="flex gap-3">
               <Info size={25} className="mt-1 text-blue-600" />
 
@@ -65,7 +65,7 @@ export default function DashboardHero() {
                   Sobre o recorte
                 </h3>
 
-                <p className="text-sm leading-6 text-slate-600">
+                <p className="text-sm leading-5 text-slate-600">
                   Exibindo dados para os estados da região Nordeste (NE) no
                   indicador Densidade demográfica.
                 </p>

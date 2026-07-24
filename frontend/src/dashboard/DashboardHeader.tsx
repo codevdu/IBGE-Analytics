@@ -27,12 +27,11 @@ export default function DashboardHeader() {
         {/* Navegação */}
         <nav className="flex items-center justify-center gap-2 md:flex sm:px-16">
           <AlertCircle size={15} />
-          <a
-            href="#"
-            className="font-sm sm:font-medium text-slate-600 transition hover:text-emerald-600"
+          <span
+            className="font-sm sm:font-medium text-slate-600"
           >
             Sobre os dados
-          </a>
+          </span>
         </nav>
       </div>
     </header>
