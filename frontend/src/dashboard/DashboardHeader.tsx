@@ -26,9 +26,9 @@ export default function DashboardHeader() {
 
         {/* Navegação */}
         <nav className="ml-2 mr-2 flex shrink-0 items-center gap-1 sm:gap-2">
-          <AlertCircle className="h-3 w-3 text-slate-600 sm:h-4 sm:w-4 md:h-5 md:w-5" />
+          <AlertCircle className="h-3 w-3 text-blue-600/80 sm:h-4 sm:w-4 md:h-5 md:w-5" />
 
-          <span className="text-[9px] font-medium text-slate-600 sm:text-[10px] md:text-xs lg:text-sm">
+          <span className="text-[9px] font-medium text-blue-600/80 sm:text-[10px] md:text-xs lg:text-sm">
             Sobre os dados
           </span>
         </nav>

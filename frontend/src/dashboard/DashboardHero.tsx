@@ -13,9 +13,9 @@ export default function DashboardHero() {
   }
 
   return (
-    <section className="w-full mt-2 mb-2 p-1 sm:px-5">
-      <div className="rounded-md border border-slate-200 bg-white p-2 px-4 shadow-sm">
-        <div className="grid gap-6 lg:grid-cols-3">
+    <section className="w-full mt-2 mb-3 p-1 sm:px-5">
+      <div className="rounded-md border border-slate-200 bg-white p-2 px-4 sm:px-9 shadow-sm">
+        <div className="grid gap-4 sm:gap-8 lg:grid-cols-3">
           {/* Indicador */}
 
           <Dropdown
@@ -58,7 +58,7 @@ export default function DashboardHero() {
 
             {/* Está lógica precisa ser alterada de acordo com a região que está sendo exibida
              ou podemos deixar somente um texto generico  */}
-          <div className="rounded-xl bg-blue-50 p-2 sm:p-3 lg:p-3">
+          <div className="rounded bg-blue-50 p-2 sm:p-3 lg:p-3">
             <div className="flex items-start gap-2 sm:gap-2">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-600 sm:h-5 sm:w-5 lg:h-4 lg:w-4" />
 
@@ -67,9 +67,11 @@ export default function DashboardHero() {
                   Sobre o recorte
                 </h3>
 
-                <p className="text-[10px] leading-4 text-slate-600 sm:text-xs sm:leading-5 lg:text-sm lg:leading-5">
-                  Exibindo dados para os estados da região Nordeste (NE) no
+                <p className="text-[10px] leading-4 text-slate-800 sm:text-xs sm:leading-5 lg:text-xs lg:leading-5">
+                  <i>
+                    Exibindo dados para os estados da região Nordeste (NE) no
                   indicador Densidade demográfica.
+                  </i>
                 </p>
               </div>
             </div>
