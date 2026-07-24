@@ -1,12 +1,13 @@
 import express, { Request, Response, NextFunction } from "express"
 import cors from "cors"
 import swaggerUi from "swagger-ui-express"
+import basicAuth from "express-basic-auth"
 
 import { routes } from "./routes"
 import { swaggerDocument } from "./swagger"
 
-
 const PORT = process.env.PORT || 3333
+const URL_BACKEND = process.env.BACKEND_URL || `http://localhost:${PORT}`
 const app = express()
 
 const allowedOrigins = process.env.FRONT_URL || "http://localhost:5173"
@@ -23,8 +24,21 @@ app.use(cors({
   credentials: true
 }))
 
+
 app.use(express.json())
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
+const docsUser = process.env.DOCS_USER || ""
+const docsPassword = process.env.DOCS_PASSWORD || ""
+
+app.use(
+  "/docs",
+  basicAuth({
+    challenge: true,
+    users: { [docsUser]: docsPassword },
+  }),
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+)
 app.use(routes)
 
 app.use((error: any, request: Request, response: Response, _: NextFunction) => {
@@ -32,6 +46,6 @@ app.use((error: any, request: Request, response: Response, _: NextFunction) => {
 })
 
 app.listen(PORT, () => console.log(`
-  🚀 Server running on: http://localhost:${PORT}
-  📚 Documentation at: http://localhost:${PORT}/docs
+  🚀 Server running on: ${URL_BACKEND}
+  📚 Documentation at: ${URL_BACKEND}/docs
 `))
