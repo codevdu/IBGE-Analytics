@@ -22,7 +22,7 @@ export function Dashboard({
     async function fetchDashboard() {
       try {
         const { data } = await axios.get<DashboardResponse>(
-          `http://localhost:3333/api/dashboard`,
+          `${import.meta.env.VITE_BACKEND_SERVICE_URL}/api/dashboard`,
           { params: { 
             indicador, 
             regiao 
