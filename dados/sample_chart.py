@@ -1,85 +1,61 @@
 import json
-import pandas as pd
-import plotly.express as px
 
-from ingestion import fetch_indicator
+# Importando o nosso ecossistema já pronto!
+from ingestion import fetch_states, fetch_population, fetch_density
+from cleaning import build_complete_df, calculate_kpis
+from visualization import generate_dynamic_figure
 
-
-def generate_sample_chart():
+def generate_sample_chart(tipo="densidade"):
     """
-    Gera um gráfico utilizando os dados reais do IBGE
-    e exporta um JSON no padrão esperado pelo Fullstack.
+    Gera um gráfico estático JSON aproveitando a nossa arquitetura limpa.
     """
-
-    # Mesmo indicador usado no teste da ingestão
-    dados = fetch_indicator("6579", "9324", "-1")
-
-    if dados is None:
-        print("Erro ao obter dados do IBGE.")
+    print(f"--- Gerando amostra estática para: {tipo} ---")
+    
+    # Ingestão
+    payload_estados = fetch_states()
+    
+    if tipo == "populacao":
+        payload_indicador = fetch_population()
+        nome_indicador = "População residente estimada"
+        unidade = "Pessoas"
+    elif tipo == "densidade":
+        payload_indicador = fetch_density()
+        nome_indicador = "Densidade demográfica"
+        unidade = "Habitantes por km²"
+    else:
+        print("❌ Tipo inválido. Use 'populacao' ou 'densidade'.")
         return
 
-    # ================================
-    # Converte o JSON do IBGE para DataFrame
-    # ================================
-    series = dados[0]["resultados"][0]["series"]
+    if not payload_indicador or not payload_estados:
+        print("❌ Erro ao obter dados do IBGE.")
+        return
 
-    registros = []
+    # Limpeza e KPIs 
+    df_completo = build_complete_df(payload_indicador, payload_estados)
+    df_filtrado, kpis = calculate_kpis(df_completo, target_region="BR")
 
-    for estado in series:
-        nome = estado["localidade"]["nome"]
+    # Geração da Figura Dinâmica
+    figura_json_string = generate_dynamic_figure(df_filtrado, nome_indicador, unidade)
+    
+    # Converte a string devolvida pelo Plotly para um dicionário Python
+    figura_dict = json.loads(figura_json_string)
 
-        # Pega o único valor existente da série
-        valor = list(estado["serie"].values())[0]
-
-        if valor in ("...", "-"):
-            continue
-
-        registros.append({
-            "Estado": nome,
-            "Valor": float(valor.replace(",", "."))
-        })
-
-    df = pd.DataFrame(registros)
-
-    print(df.head())
-
-    # ================================
-    # Gráfico Plotly
-    # ================================
-    fig = px.bar(
-        df,
-        x="Estado",
-        y="Valor",
-        title="Indicador por Estado"
-    )
-
-    # ================================
-    # KPIs
-    # ================================
-    maior = df.loc[df["Valor"].idxmax()]
-    menor = df.loc[df["Valor"].idxmin()]
-
+    # Monta e salva 
     resultado = {
-        "figura": json.loads(fig.to_json()),
-        "kpis": {
-            "total": len(df),
-            "maior": {
-                "nome": maior["Estado"],
-                "valor": maior["Valor"]
-            },
-            "menor": {
-                "nome": menor["Estado"],
-                "valor": menor["Valor"]
-            },
-            "media": round(df["Valor"].mean(), 2)
-        }
+        "figura": figura_dict,
+        "kpis": kpis
     }
 
-    with open("amostra_grafico.json", "w", encoding="utf-8") as f:
+    # Define o nome do arquivo dinamicamente baseado no 'tipo'
+    nome_arquivo = f"amostra_{tipo}.json"
+
+    with open(nome_arquivo, "w", encoding="utf-8") as f:
         json.dump(resultado, f, ensure_ascii=False, indent=2)
 
-    print("Arquivo 'amostra_grafico.json' gerado com sucesso!")
+    print(f"✅ Sucesso! Arquivo '{nome_arquivo}' gerado com os dados de {nome_indicador}!\n")
 
 
 if __name__ == "__main__":
-    generate_sample_chart()
+    # Gera os dois arquivos de uma vez só com um único clique!
+    generate_sample_chart(tipo="populacao")
+    generate_sample_chart(tipo="densidade")
