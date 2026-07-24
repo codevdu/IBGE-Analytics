@@ -10,9 +10,10 @@ import DashboardStatistics from "../dashboard/DashboardStatistics";
 type DashboardProps = {
   indicador: string;
   regiao: string;
+  onChange: (campo: "indicador" | "regiao", valor: string) => void;
 };
 
-export function Dashboard({ indicador, regiao }: DashboardProps) {
+export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
   const [data, setData] = useState<DashboardResponse | null>(null);
 
   useEffect(() => {
@@ -20,13 +21,16 @@ export function Dashboard({ indicador, regiao }: DashboardProps) {
       try {
         const { data } = await axios.get<DashboardResponse>(
           `${import.meta.env.VITE_BACKEND_SERVICE_URL}/api/dashboard`,
-          { params: { 
-            indicador, 
-            regiao 
-          } 
-        }
+          {
+            params: {
+              indicador,
+              regiao
+            }
+          }
         )
+        console.log("Novo fetch:", indicador, regiao)
         setData(data)
+        console.log("Dados recebidos:", data)
       } catch (error) {
         console.error("Erro ao buscar dashboard:", error);
       }
@@ -42,11 +46,12 @@ export function Dashboard({ indicador, regiao }: DashboardProps) {
   return (
     <div className="bg-slate-50 w-full text-slate-900 overflow-hidden">
       <DashboardHeader />
-      <DashboardHero />
+      <DashboardHero indicador = { indicador } regiao={regiao} onChange={onChange} />
       <DashboardStatistics />
 
-      <div className="w-full h-[350px] sm:h-[450px] md:h-[450px] lg:h-[400px] mt-5 sm:mt-6">
+      <div className="w-full h-87.5 sm:h-112.5 md:h-112.5 lg:h-100 mt-5 sm:mt-6">
         <Plot
+          key={`${indicador}-${regiao}`}
           data={data.figura.data}
           layout={{
             ...data.figura.layout,
