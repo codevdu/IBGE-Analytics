@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import Plot from "react-plotly.js"
 import axios from "axios"
 import type { DashboardResponse } from "../types/dashboard"
+import DashboardHeader from "../dashboard/DashboardHeader"
+import DashboardHero from "../dashboard/DashboardHero"
 
 type DashboardProps = {
   indicador: string
@@ -39,5 +41,11 @@ export function Dashboard({
     return <p>Selecione um recorte…</p>
   }
 
-  return <Plot data={data.figura.data} layout={data.figura.layout} />
+  return (
+    <div className="bg-slate-50 text-slate-900">
+      <DashboardHeader />
+      <DashboardHero />
+      <Plot data={data.figura.data} layout={data.figura.layout} />
+    </div>
+  )
 }
