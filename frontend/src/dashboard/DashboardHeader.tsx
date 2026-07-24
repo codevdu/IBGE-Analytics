@@ -4,7 +4,7 @@ import logo from "../assets/Logo.png";
 export default function DashboardHeader() {
   return (
     <header className="w-full border-b border-slate-200 bg-white shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="flex items-center justify-between px-4">
 
         <div className="flex items-center">
           <div className="rounded-lg text-white">
@@ -25,11 +25,11 @@ export default function DashboardHeader() {
         </div>
 
         {/* Navegação */}
-        <nav className="flex items-center justify-center gap-2 md:flex">
+        <nav className="flex items-center justify-center gap-2 md:flex sm:px-16">
           <AlertCircle size={15} />
           <a
             href="#"
-            className="font-medium text-slate-600 transition hover:text-emerald-600"
+            className="font-sm sm:font-medium text-slate-600 transition hover:text-emerald-600"
           >
             Sobre os dados
           </a>
