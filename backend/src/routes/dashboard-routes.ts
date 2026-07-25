@@ -39,7 +39,7 @@ dashboardRoutes.get("/", async (req: Request, res: Response) => {
   try {
     const pyServiceUrl = process.env.PY_SERVICE_URL || "http://localhost:8000"
 
-    const { data } = await axios.get(`${pyServiceUrl}/chart`, {
+    const { data } = await axios.get(`${pyServiceUrl}/grafico`, {
       params: {
         indicador: String(indicador),
         regiao: String(regiao)
