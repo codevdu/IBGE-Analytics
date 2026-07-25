@@ -9,7 +9,7 @@ from visualization import generate_dynamic_figure
 app = FastAPI(title="IBGE Analytics API")
 
 @app.get("/grafico")
-def get_grafico(indicador: str, regiao: str = "BR"):
+def get_grafico(indicador: str, regiao: str = "Brasil"):
     """
     Endpoint que executa: ingestão -> limpeza -> agregação -> figura
     """
@@ -32,10 +32,11 @@ def get_grafico(indicador: str, regiao: str = "BR"):
 
     # Limpeza
     df_completo = build_complete_df(payload_indicador, payload_estados)
+    regiao_filtro = "BR" if regiao.lower() == "brasil" else regiao
 
     # Agregação e KPIs
     try:
-        df_filtrado, kpis = calculate_kpis(df_completo, target_region=regiao)
+        df_filtrado, kpis = calculate_kpis(df_completo, target_region=regiao_filtro)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
