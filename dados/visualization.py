@@ -2,6 +2,23 @@ import plotly.express as px
 import json
 
 # ==========================================
+# PALETA FIXA (mesmos tokens Tailwind usados no site)
+# ==========================================
+BG_COLOR = "#ffffff"          # fundo branco, igual ao restante do site
+GRID_COLOR = "#e2e8f0"        # slate-200 - linhas de grade sutis
+TEXT_COLOR = "#0f172a"        # slate-900 - texto escuro (títulos, eixos, legendas)
+MUTED_TEXT_COLOR = "#64748b"  # slate-500 - texto secundário (ticks)
+
+# Gradiente seguindo as 4 cores dos cards de KPI do site, na mesma ordem:
+# verde (Maior valor) -> azul (Menor valor) -> roxo (Média) -> laranja (Total de estados)
+SITE_COLORSCALE = [
+    [0.00, "#22c55e"],  # verde
+    [0.33, "#3b82f6"],  # azul
+    [0.66, "#a855f7"],  # roxo
+    [1.00, "#f97316"],  # laranja
+]
+
+# ==========================================
 # GERAÇÃO DE GRÁFICOS (PLOTLY)
 # ==========================================
 
@@ -27,13 +44,37 @@ def generate_dynamic_figure(df_filtered, indicator_name, unit):
             "name": "Estado",
             "value": f"{indicator_name} ({unit})"
         },
-        template="plotly_dark", # Tema escuro
         color="value",          # Adiciona um gradiente de cor baseado no valor
-        color_continuous_scale="Viridis" 
+        color_continuous_scale=SITE_COLORSCALE
     )
     
     # Garante que o eixo X mostre todos os nomes sem pular nenhum
     fig.update_xaxes(tickmode="linear")
+
+    # Cores fixas, iguais às do site (fundo escuro, texto claro, grid sutil)
+    fig.update_layout(
+        paper_bgcolor=BG_COLOR,
+        plot_bgcolor=BG_COLOR,
+        font=dict(color=TEXT_COLOR),
+        title=dict(font=dict(color=TEXT_COLOR, size=18)),
+        xaxis=dict(
+            gridcolor=GRID_COLOR,
+            linecolor=GRID_COLOR,
+            tickfont=dict(color=MUTED_TEXT_COLOR),
+            title=dict(font=dict(color=MUTED_TEXT_COLOR)),
+        ),
+        yaxis=dict(
+            gridcolor=GRID_COLOR,
+            linecolor=GRID_COLOR,
+            tickfont=dict(color=MUTED_TEXT_COLOR),
+            title=dict(font=dict(color=MUTED_TEXT_COLOR)),
+        ),
+        coloraxis_colorbar=dict(
+            title=dict(font=dict(color=TEXT_COLOR)),
+            tickfont=dict(color=MUTED_TEXT_COLOR),
+        ),
+        legend=dict(font=dict(color=TEXT_COLOR)),
+    )
     
     # Exporta via fig.to_json()
     fig_json = fig.to_json()
