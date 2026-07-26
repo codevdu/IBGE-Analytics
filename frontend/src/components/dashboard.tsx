@@ -1,5 +1,4 @@
-// components/dashboard.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Plot from "react-plotly.js";
 import axios from "axios";
 import type { DashboardResponse } from "../types/dashboard";
@@ -11,71 +10,104 @@ type DashboardProps = {
   indicador: string;
   regiao: string;
   onChange: (campo: "indicador" | "regiao", valor: string) => void;
-};
+}
 
 export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
-  const [data, setData] = useState<DashboardResponse | null>(null);
+  const [data, setData] = useState<DashboardResponse | null>(null)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null)
+
+  const requestId = useRef(0)
 
   useEffect(() => {
+    const currentRequestId = ++requestId.current
+
     async function fetchDashboard() {
+      setLoading(true);
+      setError(null);
+
       try {
         const { data } = await axios.get<DashboardResponse>(
           `${import.meta.env.VITE_BACKEND_SERVICE_URL}/api/dashboard`,
-          {
-            params: {
-              indicador,
-              regiao
-            }
+          { params: { indicador, regiao } }
+        );
+
+        if (currentRequestId !== requestId.current) return
+
+        setData(data);
+      } catch (err) {
+        if (currentRequestId !== requestId.current) return
+
+        if (axios.isAxiosError(err)) {
+          if (err.response?.status === 404) {
+            setError("Não há dados disponíveis para essa combinação de indicador e região.")
+          } else if (!err.response) {
+            setError("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.")
+          } else {
+            setError("Ocorreu um erro ao carregar os dados. Tente novamente em instantes.")
           }
-        )
-        console.log("Novo fetch:", indicador, regiao)
-        setData(data)
-        console.log("Dados recebidos:", data)
-      } catch (error) {
-        console.error("Erro ao buscar dashboard:", error);
+        } else {
+          setError("Ocorreu um erro inesperado. Tente novamente.")
+        }
+
+        console.error("Erro ao buscar dashboard:", err)
+      } finally {
+        if (currentRequestId === requestId.current) {
+          setLoading(false);
+        }
       }
     }
 
     fetchDashboard();
   }, [indicador, regiao]);
 
-  if (!data) {
-    return <p>Selecione um recorte…</p>;
-  }
-
   return (
     <div className="bg-slate-50 w-full text-slate-900 overflow-hidden">
       <DashboardHeader />
-      <DashboardHero indicador = { indicador } regiao={regiao} onChange={onChange} />
-      <DashboardStatistics />
+      <DashboardHero indicador={indicador} regiao={regiao} onChange={onChange} disabled={loading} />
 
-      <div className="w-full h-87.5 sm:h-112.5 md:h-112.5 lg:h-100 mt-5 sm:mt-6">
-        <Plot
-          key={`${indicador}-${regiao}`}
-          data={data.figura.data}
-          layout={{
-            ...data.figura.layout,
-            autosize: true,
-            width: undefined,
-            height: undefined,
-            margin: {
-              l: 40,
-              r: 20,
-              t: 40,
-              b: 40,
-            },
-          }}
-          useResizeHandler
-          style={{
-            width: "100%",
-            height: "100%",
-          }}
-          config={{
-            responsive: true,
-            displayModeBar: false,
-          }}
-        />
-      </div>
+      {error && (
+        <div className="mx-1 sm:mx-5 mt-3 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {!error && loading && !data && (
+        <div className="mx-1 sm:mx-5 mt-3 rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-500">
+          Carregando dados…
+        </div>
+      )}
+
+      {!error && !data && !loading && <p>Selecione um recorte…</p>}
+
+      {data && (
+        <>
+          <DashboardStatistics kpis={data.kpis} indicador={indicador} loading={loading} />
+
+          <div className="w-full h-87.5 sm:h-112.5 md:h-112.5 lg:h-100 mt-5 sm:mt-6 relative">
+            {loading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60">
+                <span className="text-sm text-slate-500">Atualizando…</span>
+              </div>
+            )}
+
+            <Plot
+              key={`${indicador}-${regiao}`}
+              data={data.figura.data}
+              layout={{
+                ...data.figura.layout,
+                autosize: true,
+                width: undefined,
+                height: undefined,
+                margin: { l: 40, r: 20, t: 40, b: 40 },
+              }}
+              useResizeHandler
+              style={{ width: "100%", height: "100%" }}
+              config={{ responsive: true, displayModeBar: false }}
+            />
+          </div>
+        </>
+      )}
     </div>
-  );
+  )
 }
