@@ -41,7 +41,7 @@ def get_grafico(indicador: str, regiao: str = "Brasil"):
         raise HTTPException(status_code=404, detail=str(e))
 
     # Figura
-    figura_json_string = generate_dynamic_figure(df_filtrado, nome_indicador, unidade)
+    #figura_json_string = generate_dynamic_figure(df_filtrado, nome_indicador, unidade)
     
     # transforma a string do Plotly de volta em dicionário
     # para o FastAPI não encadear o JSON como uma string gigante textualmente
