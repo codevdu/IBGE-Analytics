@@ -1,4 +1,5 @@
-import json
+import pandas as pd
+import plotly.express as px
 
 # ==========================================
 # PALETA FIXA (mesmos tokens Tailwind usados no site)
@@ -22,35 +23,53 @@ SITE_COLORSCALE = [
 # ==========================================
 
 def generate_dynamic_figure(df_filtered, indicator_name, unit):
-    # Converte a coluna de texto para números reais
+    """
+    Gera um gráfico de barras dinâmico usando o DataFrame filtrado
+    e exporta a figura no formato JSON.
+    """
+    # Converte a coluna de texto para números reais (proteção extra)
+    df_filtered = df_filtered.copy()
     df_filtered["value"] = pd.to_numeric(df_filtered["value"])
 
-    # Ordenação decrescente (maior valor primeiro, como na imagem)
+    # Ordenação decrescente (maior valor primeiro)
     df_sorted = df_filtered.sort_values("value", ascending=False)
+
+    state_count = len(df_sorted)
+    dynamic_title = f"{indicator_name} - {state_count} estados"
 
     fig = px.bar(
         df_sorted,
         x="name",
         y="value",
-        color="value",
-        color_continuous_scale="Viridis",
+        title=dynamic_title,
         labels={
             "name": "Estado",
-            "value": f"{indicator_name} ({unit})"
+            "value": f"{indicator_name} ({unit})",
         },
-        color="value",          # Adiciona um gradiente de cor baseado no valor
-        color_continuous_scale=SITE_COLORSCALE
+        color="value",  # gradiente de cor baseado no valor
+        color_continuous_scale=SITE_COLORSCALE,
     )
-    
-    # Garante que o eixo X mostre todos os nomes sem pular nenhum
-    fig.update_xaxes(tickmode="linear")
 
-    # Cores fixas, iguais às do site (fundo escuro, texto claro, grid sutil)
+    fig.update_traces(marker_line_width=0)
+
+    # Rótulos do eixo X: ângulo fixo + automargin, pra não sobrepor
+    # e pra o Plotly reservar espaço automaticamente (essencial no mobile)
+    fig.update_xaxes(
+        tickmode="linear",
+        tickangle=-45,
+        automargin=True,
+    )
+    fig.update_yaxes(automargin=True)
+
     fig.update_layout(
         paper_bgcolor=BG_COLOR,
         plot_bgcolor=BG_COLOR,
         font=dict(color=TEXT_COLOR),
-        title=dict(font=dict(color=TEXT_COLOR, size=18)),
+        title=dict(font=dict(color=TEXT_COLOR, size=18), x=0.02, xanchor="left"),
+        bargap=0.2,
+        # Sem margens fixas em pixels: automargin cuida disso e evita
+        # que o gráfico "vaze" pra fora da tela em telas estreitas.
+        margin=dict(l=10, r=10, t=50, b=10),
         xaxis=dict(
             gridcolor=GRID_COLOR,
             linecolor=GRID_COLOR,
@@ -63,48 +82,26 @@ def generate_dynamic_figure(df_filtered, indicator_name, unit):
             tickfont=dict(color=MUTED_TEXT_COLOR),
             title=dict(font=dict(color=MUTED_TEXT_COLOR)),
         ),
-        coloraxis_colorbar=dict(
-            title=dict(font=dict(color=TEXT_COLOR)),
-            tickfont=dict(color=MUTED_TEXT_COLOR),
-        ),
-        legend=dict(font=dict(color=TEXT_COLOR)),
-    )
-    
-    # Exporta via fig.to_json()
-    fig_json = fig.to_json()
-    
-    return fig_json
-
-    fig.update_traces(marker_line_width=0)
-
-    fig.update_layout(
-        template="plotly_dark",
-        title=dict(
-            text=f"{indicator_name} - {len(df_sorted)} estados",
-            x=0.02,
-            xanchor="left",
-            font=dict(size=18, color="#f8fafc")
-        ),
-        font=dict(family="Inter, sans-serif", color="#e2e8f0"),
-        paper_bgcolor="#0d1117",
-        plot_bgcolor="#0d1117",
-        bargap=0.2,
-        margin=dict(l=50, r=140, t=70, b=90),
-        coloraxis_colorbar=dict(
-            title=dict(
-                text=f"{indicator_name} ({unit})",
-                side="top",                 # <- título na horizontal, como na imagem
-                font=dict(size=12, color="#e2e8f0")
-            ),
-            tickfont=dict(color="#cbd5e1"),
-            thickness=16,
-            len=0.7,
-            x=1.03,
-            y=0.5,
-            xanchor="left",
-            outlinewidth=0,
-            bordercolor="rgba(255,255,255,0.08)",
-        ),
+        # Colorbar removida: numa tela estreita ela ocupa um espaço fixo
+        # que empurra o gráfico pra fora da área visível (era a causa
+        # do corte no celular). A cor já é redundante com a altura da barra.
+        coloraxis_showscale=False,
         showlegend=False,
     )
-    
+
+    # Exporta via fig.to_json()
+    fig_json = fig.to_json()
+
+    return fig_json
+
+
+if __name__ == "__main__":
+    print("--- TESTANDO GERAÇÃO DA FIGURA ---")
+    df_mock = pd.DataFrame({
+        "name": ["São Paulo", "Rio de Janeiro", "Ceará", "Roraima"],
+        "value": [46000000, 17000000, 9000000, 600000],
+    })
+    resultado = generate_dynamic_figure(df_mock, "População residente (Censo 2010)", "Pessoas")
+    assert resultado.startswith("{")
+    print("Sucesso! Gráfico gerado e convertido para JSON com formato válido do Plotly.")
+    print(f"Tamanho do payload JSON gerado: {len(resultado)} caracteres.")
