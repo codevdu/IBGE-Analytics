@@ -7,11 +7,21 @@ type DashboardStatisticsProps = {
   loading?: boolean;
 };
 
+function formatNumber(valor: number, indicador: string) {
+  // Densidade tem casas decimais relevantes (hab/km²); população é sempre inteira.
+  const casasDecimais = indicador === "densidade" ? 1 : 0;
+
+  return valor.toLocaleString("pt-BR", {
+    minimumFractionDigits: casasDecimais,
+    maximumFractionDigits: casasDecimais,
+  });
+}
+
 export default function DashboardStatistics({ kpis, indicador, loading }: DashboardStatisticsProps) {
   const statistics = [
     {
       title: "Maior valor",
-      value: String(kpis.maior.valor),
+      value: formatNumber(kpis.maior.valor, indicador),
       description: kpis.maior.nome,
       icon: TrendingUp,
       iconBg: "bg-green-100",
@@ -21,7 +31,7 @@ export default function DashboardStatistics({ kpis, indicador, loading }: Dashbo
     },
     {
       title: "Menor valor",
-      value: String(kpis.menor.valor),
+      value: formatNumber(kpis.menor.valor, indicador),
       description: kpis.menor.nome,
       icon: TrendingDown,
       iconBg: "bg-red-100",
@@ -31,7 +41,7 @@ export default function DashboardStatistics({ kpis, indicador, loading }: Dashbo
     },
     {
       title: "Média da região",
-      value: String(kpis.media),
+      value: formatNumber(kpis.media, indicador),
       description: indicador === "densidade" ? "hab/km²" : "habitantes",
       icon: ChartColumn,
       iconBg: "bg-blue-100",
