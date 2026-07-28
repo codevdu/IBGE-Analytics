@@ -1,4 +1,3 @@
-import plotly.express as px
 import json
 
 # ==========================================
@@ -23,23 +22,18 @@ SITE_COLORSCALE = [
 # ==========================================
 
 def generate_dynamic_figure(df_filtered, indicator_name, unit):
-    """
-    Gera um gráfico de barras dinâmico usando o DataFrame filtrado 
-    e exporta a figura no formato JSON.
-    """
-    
-    # Título dinâmico com nome do indicador e contagem de estados
-    state_count = len(df_filtered)
-    dynamic_title = f"{indicator_name} - {state_count} estados"
-    
-    # px.bar construído a partir do DataFrame agregado
-    # Ele não tem número fixo de barras (se adapta ao filtro)
-    # Rótulos dos eixos claros
+    # Converte a coluna de texto para números reais
+    df_filtered["value"] = pd.to_numeric(df_filtered["value"])
+
+    # Ordenação decrescente (maior valor primeiro, como na imagem)
+    df_sorted = df_filtered.sort_values("value", ascending=False)
+
     fig = px.bar(
-        df_filtered,
+        df_sorted,
         x="name",
         y="value",
-        title=dynamic_title,
+        color="value",
+        color_continuous_scale="Viridis",
         labels={
             "name": "Estado",
             "value": f"{indicator_name} ({unit})"
@@ -81,27 +75,37 @@ def generate_dynamic_figure(df_filtered, indicator_name, unit):
     
     return fig_json
 
+    fig.update_traces(marker_line_width=0)
 
-# ==========================================
-# TESTE ISOLADO DE GERAÇÃO DE FIGURA
-# ==========================================
-if __name__ == "__main__":
-    import pandas as pd
-    
-    # Mock simples já ordenado (simulando a saída do calculate_kpis)
-    mock_df = pd.DataFrame([
-        {"name": "São Paulo", "value": 46649132.0},
-        {"name": "Ceará", "value": 9240580.0},
-        {"name": "Tocantins", "value": 1600000.0},
-        {"name": "Amapá", "value": 850000.0}
-    ])
-    
-    print("--- TESTANDO GERAÇÃO DA FIGURA ---")
-    
-    json_output = generate_dynamic_figure(
-        df_filtered=mock_df, 
-        indicator_name="População residente estimada", 
-        unit="Pessoas"
+    fig.update_layout(
+        template="plotly_dark",
+        title=dict(
+            text=f"{indicator_name} - {len(df_sorted)} estados",
+            x=0.02,
+            xanchor="left",
+            font=dict(size=18, color="#f8fafc")
+        ),
+        font=dict(family="Inter, sans-serif", color="#e2e8f0"),
+        paper_bgcolor="#0d1117",
+        plot_bgcolor="#0d1117",
+        bargap=0.2,
+        margin=dict(l=50, r=140, t=70, b=90),
+        coloraxis_colorbar=dict(
+            title=dict(
+                text=f"{indicator_name} ({unit})",
+                side="top",                 # <- título na horizontal, como na imagem
+                font=dict(size=12, color="#e2e8f0")
+            ),
+            tickfont=dict(color="#cbd5e1"),
+            thickness=16,
+            len=0.7,
+            x=1.03,
+            y=0.5,
+            xanchor="left",
+            outlinewidth=0,
+            bordercolor="rgba(255,255,255,0.08)",
+        ),
+        showlegend=False,
     )
     
     # Verifica se a string retornada é um JSON válido e tem as configurações do Plotly

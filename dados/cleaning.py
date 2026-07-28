@@ -107,17 +107,17 @@ def calculate_kpis(df, target_region=None):
     
     # Calcula o total, maior, menor e media usando Pandas
     kpis = {
-        "total": len(df_filtered),
-        "maior": {
-            "nome": df_filtered.iloc[0]["name"],
-            "valor": df_filtered.iloc[0]["value"]
-        },
-        "menor": {
-            "nome": df_filtered.iloc[-1]["name"],
-            "valor": df_filtered.iloc[-1]["value"]
-        },
-        "media": round(df_filtered["value"].mean(), 2)
-    }
+    "total": int(len(df_filtered)),
+    "maior": {
+        "nome": str(df_filtered.iloc[0]["name"]),
+        "valor": float(df_filtered.iloc[0]["value"])
+    },
+    "menor": {
+        "nome": str(df_filtered.iloc[-1]["name"]),
+        "valor": float(df_filtered.iloc[-1]["value"])
+    },
+    "media": float(round(df_filtered["value"].mean(), 2))
+}
     
     return df_filtered, kpis
 
