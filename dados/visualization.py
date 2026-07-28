@@ -108,9 +108,3 @@ def generate_dynamic_figure(df_filtered, indicator_name, unit):
         showlegend=False,
     )
     
-    # Verifica se a string retornada é um JSON válido e tem as configurações do Plotly
-    if isinstance(json_output, str) and "data" in json_output and "layout" in json_output:
-        print("✅ Sucesso! Gráfico gerado e convertido para JSON com formato válido do Plotly.")
-        print(f"Tamanho do payload JSON gerado: {len(json_output)} caracteres.")
-    else:
-        print("❌ Erro na conversão do gráfico.")
