@@ -1,6 +1,5 @@
 import { AlertCircle } from "lucide-react";
-import logo from "../assets/Logo.png";
-import { Link } from "react-router";
+import logo from "../assets/logo.png";
 
 export default function DashboardHeader() {
   return (

@@ -1,11 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import Plot from "react-plotly.js";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import axios from "axios";
 import type { DashboardResponse } from "../types/dashboard";
 import DashboardHeader from "../dashboard/DashboardHeader";
 import DashboardHero from "../dashboard/DashboardHero";
 import DashboardStatistics from "../dashboard/DashboardStatistics";
 import { Loader } from "lucide-react";
+
+const Plot = lazy(async () => {
+  const Plotly = (await import("plotly.js-basic-dist-min")).default;
+  const factory = (await import("react-plotly.js/factory")).default;
+  return { default: factory(Plotly) };
+});
 
 type DashboardProps = {
   indicador: string;
@@ -92,20 +97,22 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
               </div>
             )}
 
-            <Plot
-              key={`${indicador}-${regiao}`}
-              data={data.figura.data}
-              layout={{
-                ...data.figura.layout,
-                autosize: true,
-                width: undefined,
-                height: undefined,
-                margin: { l: 40, r: 20, t: 40, b: 40 },
-              }}
-              useResizeHandler
-              style={{ width: "100%", height: "100%" }}
-              config={{ responsive: true, displayModeBar: false }}
-            />
+            <Suspense fallback={<div className="text-sm text-slate-500 p-4">Carregando gráfico…</div>}>
+              <Plot
+                key={`${indicador}-${regiao}`}
+                data={data.figura.data}
+                layout={{
+                  ...data.figura.layout,
+                  autosize: true,
+                  width: undefined,
+                  height: undefined,
+                  margin: { l: 40, r: 20, t: 40, b: 40 },
+                }}
+                useResizeHandler
+                style={{ width: "100%", height: "100%" }}
+                config={{ responsive: true, displayModeBar: false }}
+              />
+            </Suspense>
           </div>
         </>
       )}

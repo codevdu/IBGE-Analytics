@@ -6,9 +6,15 @@ import json
 # ==========================================
 # Dicionário que centraliza os códigos do IBGE para facilitar a manutenção.
 INDICATORS = {
-    "population": {"aggregate": "6579", "variable": "9324", "period": "-1"},
+    # Censo Demográfico 2010 - População residente (agregado 200, variável 93)
+    "population": {"aggregate": "200", "variable": "93", "period": "2010"},
+    # Censo Demográfico 2010 - Densidade demográfica (agregado 1298, variável 614)
     "density": {"aggregate": "1298", "variable": "614", "period": "2010"},
 }
+
+# Header de navegador: algumas APIs públicas do governo bloqueiam com 403
+# requisições feitas com o User-Agent padrão do requests (ex: vindas de IPs de nuvem/Render).
+_HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
 
 def fetch_population():
     """Atalho para buscar a população usando o dicionário."""
@@ -94,7 +100,7 @@ def fetch_indicator(aggregate, variable, period):
     
     try:
         # Adicionado timeout de 30 segundos
-        response = requests.get(url, timeout=30)
+        response = requests.get(url, timeout=30, headers=_HEADERS)
         
         # Levanta um erro se o status HTTP não for 200 (OK)
         response.raise_for_status() 
@@ -124,7 +130,7 @@ def fetch_states():
     print(f"[API] Buscando lista de estados na URL: {url}")
     
     try:
-        response = requests.get(url, timeout=30)
+        response = requests.get(url, timeout=30, headers=_HEADERS)
         response.raise_for_status()
         dados = response.json()
         
