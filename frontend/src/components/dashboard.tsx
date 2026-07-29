@@ -4,7 +4,7 @@ import type { DashboardResponse } from "../types/dashboard";
 import DashboardHeader from "../dashboard/DashboardHeader";
 import DashboardHero from "../dashboard/DashboardHero";
 import DashboardStatistics from "../dashboard/DashboardStatistics";
-import { Loader } from "lucide-react";
+import ClassicLoader from "./mvpblocks/classic-loader";
 
 const Plot = lazy(async () => {
   const Plotly = (await import("plotly.js-basic-dist-min")).default;
@@ -79,8 +79,8 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
       )}
 
       {!error && loading && !data && (
-        <div className="flex justify-center animate-spin mx-1 sm:mx-5 mt-3 p-4 text-sm text-slate-500">
-          <Loader className="top-56"/>
+        <div className="flex justify-center mt-40 items-center text-slate-500 mx-1 sm:mx-5 p-4">
+          <ClassicLoader />
         </div>
       )}
 
@@ -90,10 +90,12 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
         <>
           <DashboardStatistics kpis={data.kpis} indicador={indicador} loading={loading} />
 
-          <div className="w-full h-87.5 sm:h-112.5 md:h-112.5 lg:h-100 mt-5 sm:mt-6 relative">
+          <div className="w-full h-87.5 sm:h-112.5 md:h-112.5 lg:h-95 relative">
             {loading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60">
-                <span className="text-sm text-slate-500">Atualizando…</span>
+                <div className="flex justify-center items-center text-slate-300 mx-1 sm:mx-5 p-4">
+                  <ClassicLoader />
+                </div>
               </div>
             )}
 
@@ -103,14 +105,38 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
                 data={data.figura.data}
                 layout={{
                   ...data.figura.layout,
+                  paper_bgcolor: "transparent",
+                  font: { family: "Inter, sans-serif", size: 12, color: "#334155" },
                   autosize: true,
-                  width: undefined,
-                  height: undefined,
-                  margin: { l: 40, r: 20, t: 40, b: 40 },
+                  margin: { l: 32, r: 32, t: 20, b: 20 },
+                  hovermode: "closest",
+                  hoverlabel: {
+                    bgcolor: "#1e293b",
+                    bordercolor: "#1e293b",
+                    font: { family: "Inter, sans-serif", size: 12, color: "#f8fafc" },
+                  },
+                  xaxis: {
+                    ...data.figura.layout.xaxis,
+                    tickangle: -35,
+                    automargin: true,
+                    gridcolor: "#e2e8f0",
+                  },
+                  yaxis: {
+                    ...data.figura.layout.yaxis,
+                    gridcolor: "#e2e8f0",
+                    zerolinecolor: "#cbd5e1",
+                  },
+                  dragmode: true,
                 }}
                 useResizeHandler
                 style={{ width: "100%", height: "100%" }}
-                config={{ responsive: true, displayModeBar: false }}
+                config={{
+                  responsive: true,
+                  displayModeBar: false,
+                  scrollZoom: false,
+                  doubleClick: 'reset',
+                  locale: "pt-BR",
+                }}
               />
             </Suspense>
           </div>
