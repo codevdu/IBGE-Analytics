@@ -1,6 +1,8 @@
 // App.tsx
 import { useState } from 'react'
 import { Dashboard } from './components/dashboard'
+import { Route, Routes } from 'react-router'
+import AboutLink from './pages/about-data'
 
 function App() {
   const [filters, setFilters] = useState({
@@ -14,11 +16,13 @@ function App() {
 
   return (
     <div className='min-h-screen flex flex-col'>
-      <Dashboard
-        indicador={filters.indicador}
-        regiao={filters.regiao}
-        onChange={handleChange}
-      />
+      <Routes>
+        <Route
+          path="/"
+          element={<Dashboard indicador={filters.indicador} regiao={filters.regiao} onChange={handleChange} />}
+        />
+        <Route path="/about" element={<AboutLink />} />
+      </Routes>
     </div>
   )
 }
