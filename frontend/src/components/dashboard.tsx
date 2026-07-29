@@ -4,6 +4,7 @@ import type { DashboardResponse } from "../types/dashboard";
 import DashboardHeader from "../dashboard/DashboardHeader";
 import DashboardHero from "../dashboard/DashboardHero";
 import DashboardStatistics from "../dashboard/DashboardStatistics";
+import { Loader } from "lucide-react";
 
 const Plot = lazy(async () => {
   const Plotly = (await import("plotly.js-basic-dist-min")).default;
@@ -67,7 +68,7 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
   }, [indicador, regiao]);
 
   return (
-    <div className="bg-slate-50 w-full text-slate-900 overflow-hidden">
+    <div className="bg-slate-50 h-screen w-full text-slate-900 overflow-hidden">
       <DashboardHeader />
       <DashboardHero indicador={indicador} regiao={regiao} onChange={onChange} disabled={loading} />
 
@@ -78,8 +79,8 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
       )}
 
       {!error && loading && !data && (
-        <div className="mx-1 sm:mx-5 mt-3 rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-500">
-          Carregando dados…
+        <div className="flex justify-center animate-spin mx-1 sm:mx-5 mt-3 p-4 text-sm text-slate-500">
+          <Loader className="top-56"/>
         </div>
       )}
 
