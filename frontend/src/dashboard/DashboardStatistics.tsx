@@ -26,7 +26,7 @@ export default function DashboardStatistics({ kpis, indicador, loading }: Dashbo
       icon: TrendingUp,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      titleColor: "text-green-800",
+      titleColor: "text-green-600",
       borderColor: "border-l-green-500",
     },
     {
@@ -63,31 +63,26 @@ export default function DashboardStatistics({ kpis, indicador, loading }: Dashbo
 
   return (
     <section className={`w-full px-1 mt-1 sm:px-5 transition-opacity ${loading ? "opacity-50" : ""}`}>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-9 xl:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-9 xl:grid-cols-4">
         {statistics.map((card) => {
           const Icon = card.icon;
 
           return (
             <article
               key={card.title}
-              className={`flex min-h-22.5 items-center gap-2 rounded-md border border-slate-200 
-                border-l-4 ${card.borderColor} bg-white p-1 shadow-sm transition-all duration-300 
-                hover:shadow-md sm:min-h-22.5 sm:gap-4 sm:p-2lg:px-7
-              `}
+              className={`flex items-start gap-3 min-h-32 rounded-md border border-slate-200 border-l-4 ${card.borderColor} bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md sm:min-h-32 lg:px-5`}
             >
               <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${card.iconBg} sm:h-12 sm:w-12`}
+                className={`flex w-fit shrink-0 items-center sm:mt-5 mt-4 gap-1.5 rounded-full ${card.iconBg} px-2.5 py-2.5`}
               >
-                <Icon
-                  className={`${card.iconColor} h-5 w-5 sm:h-5 sm:w-5 lg:h-6 lg:w-6`}
-                />
+                <Icon className={`${card.iconColor} h-3.5 w-3.5 sm:h-4 sm:w-4`} />
               </div>
 
-              <div className="min-w-0 flex-1 pl-1">
-                <p className={`truncate text-[10px] font-semibold sm:text-xs md:text-sm ${card.titleColor}`}>
+              <div className="min-w-0 flex-1">
+                <p className={`truncate text-[10px] font-medium sm:text-xs md:text-sm ${card.titleColor}`}>
                   {card.title}
                 </p>
-                <p className="mt-1 truncate text-sm font-bold leading-none text-slate-900 sm:text-lg md:text-xl lg:text-2xl">
+                <p className="mt-1 truncate text-sm font-semibold leading-none text-slate-900 sm:text-lg md:text-xl lg:text-2xl">
                   {card.value}
                 </p>
                 <p className="mt-1 truncate text-xs text-slate-500 sm:mt-2 sm:text-sm">

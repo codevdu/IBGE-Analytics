@@ -1,9 +1,10 @@
 import { AlertCircle } from "lucide-react";
 import logo from "../assets/logo.png";
+import { Link } from "react-router";
 
 export default function DashboardHeader() {
   return (
-    <header className="w-full border-b p-0.5   border-slate-200 bg-white shadow-sm">
+    <header className="w-full border-b p-0 border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between px-1 py-2 sm:px-4 sm:py-3">
 
         <div className="flex min-w-0 items-center gap-2 sm:gap-3">
@@ -15,7 +16,7 @@ export default function DashboardHeader() {
 
           <div className="min-w-0 -ml-5 sm:-ml-7">
             <h1 className="truncate text-md font-bold text-slate-800 sm:text-sm md:text-lg lg:text-2xl">
-              Brasil em Números
+              IBGE Analytics
             </h1>
 
             <p className="text-[11px] leading-tight text-slate-700 sm:text-[10px] md:text-xs lg:text-sm">
@@ -28,7 +29,7 @@ export default function DashboardHeader() {
         <nav className="ml-2 mr-2 flex shrink-0 items-center gap-1 sm:gap-2">
           <AlertCircle className="h-3 w-3 text-blue-600/80 sm:h-4 sm:w-4 md:h-5 md:w-5" />
 
-          <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-blue-600">
+          <Link to="/about" className="sm:text-sm text-xs font-medium text-blue-500 hover:text-blue-600">
             Sobre os dados
           </Link>
         </nav>

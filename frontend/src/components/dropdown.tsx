@@ -1,4 +1,3 @@
-// components/dropdown.tsx — só adiciona a prop `disabled`
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -37,7 +36,7 @@ export function Dropdown({
 
       <div className="relative">
         {icon && (
-          <div className="absolute left-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-blue-100 p-1 sm:1.5">
+          <div className="absolute left-1.5 top-1/2 -translate-y-1/2 p-1 sm:1.5">
             {icon}
           </div>
         )}
@@ -47,7 +46,7 @@ export function Dropdown({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="sm:h-10 h-10 text-sm w-full appearance-none rounded-md border border-slate-300 bg-white pl-16 pr-12 text-slate-700 outline-none transition hover:border-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="sm:h-10 h-10 pb-0.5 text-sm w-full appearance-none rounded-md border border-slate-300 bg-white pl-10 pr-12 text-slate-700 outline-none transition hover:border-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
