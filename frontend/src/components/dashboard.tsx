@@ -1,10 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import Plot from "react-plotly.js";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import axios from "axios";
 import type { DashboardResponse } from "../types/dashboard";
 import DashboardHeader from "../dashboard/DashboardHeader";
 import DashboardHero from "../dashboard/DashboardHero";
 import DashboardStatistics from "../dashboard/DashboardStatistics";
+import { Loader } from "lucide-react";
+
+const Plot = lazy(async () => {
+  const Plotly = (await import("plotly.js-basic-dist-min")).default;
+  const factory = (await import("react-plotly.js/factory")).default;
+  return { default: factory(Plotly) };
+});
 
 type DashboardProps = {
   indicador: string;
@@ -62,7 +68,7 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
   }, [indicador, regiao]);
 
   return (
-    <div className="bg-slate-50 w-full text-slate-900 overflow-hidden">
+    <div className="bg-slate-50 h-screen w-full text-slate-900 overflow-hidden">
       <DashboardHeader />
       <DashboardHero indicador={indicador} regiao={regiao} onChange={onChange} disabled={loading} />
 
@@ -73,8 +79,8 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
       )}
 
       {!error && loading && !data && (
-        <div className="mx-1 sm:mx-5 mt-3 rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-500">
-          Carregando dados…
+        <div className="flex justify-center animate-spin mx-1 sm:mx-5 mt-3 p-4 text-sm text-slate-500">
+          <Loader className="top-56"/>
         </div>
       )}
 
@@ -91,20 +97,22 @@ export function Dashboard({ indicador, regiao, onChange }: DashboardProps) {
               </div>
             )}
 
-            <Plot
-              key={`${indicador}-${regiao}`}
-              data={data.figura.data}
-              layout={{
-                ...data.figura.layout,
-                autosize: true,
-                width: undefined,
-                height: undefined,
-                margin: { l: 40, r: 20, t: 40, b: 40 },
-              }}
-              useResizeHandler
-              style={{ width: "100%", height: "100%" }}
-              config={{ responsive: true, displayModeBar: false }}
-            />
+            <Suspense fallback={<div className="text-sm text-slate-500 p-4">Carregando gráfico…</div>}>
+              <Plot
+                key={`${indicador}-${regiao}`}
+                data={data.figura.data}
+                layout={{
+                  ...data.figura.layout,
+                  autosize: true,
+                  width: undefined,
+                  height: undefined,
+                  margin: { l: 40, r: 20, t: 40, b: 40 },
+                }}
+                useResizeHandler
+                style={{ width: "100%", height: "100%" }}
+                config={{ responsive: true, displayModeBar: false }}
+              />
+            </Suspense>
           </div>
         </>
       )}

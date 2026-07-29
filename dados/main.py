@@ -18,7 +18,7 @@ def get_grafico(indicador: str, regiao: str = "Brasil"):
     
     if indicador.lower() == "populacao":
         payload_indicador = fetch_population()
-        nome_indicador = "População residente estimada"
+        nome_indicador = "População residente (Censo 2010)"
         unidade = "Pessoas"
     elif indicador.lower() == "densidade":
         payload_indicador = fetch_density()
@@ -31,7 +31,11 @@ def get_grafico(indicador: str, regiao: str = "Brasil"):
          raise HTTPException(status_code=500, detail="Erro ao buscar dados do IBGE.")
 
     # Limpeza
-    df_completo = build_complete_df(payload_indicador, payload_estados)
+    try:
+        df_completo = build_complete_df(payload_indicador, payload_estados)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao limpar/cruzar dados do IBGE: {e}")
+
     regiao_filtro = "BR" if regiao.lower() == "brasil" else regiao
 
     # Agregação e KPIs
@@ -41,11 +45,13 @@ def get_grafico(indicador: str, regiao: str = "Brasil"):
         raise HTTPException(status_code=404, detail=str(e))
 
     # Figura
-    #figura_json_string = generate_dynamic_figure(df_filtrado, nome_indicador, unidade)
-    
-    # transforma a string do Plotly de volta em dicionário
-    # para o FastAPI não encadear o JSON como uma string gigante textualmente
-    figura_dict = json.loads(figura_json_string)
+    try:
+        figura_json_string = generate_dynamic_figure(df_filtrado, nome_indicador, unidade)
+        # transforma a string do Plotly de volta em dicionário
+        # para o FastAPI não encadear o JSON como uma string gigante textualmente
+        figura_dict = json.loads(figura_json_string)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar a figura: {e}")
 
     # Retorno EXATAMENTE no formato do contrato exigido
     return {

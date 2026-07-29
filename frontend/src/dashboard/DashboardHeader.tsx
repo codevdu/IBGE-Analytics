@@ -1,5 +1,5 @@
 import { AlertCircle } from "lucide-react";
-import logo from "../assets/Logo.png";
+import logo from "../assets/logo.png";
 
 export default function DashboardHeader() {
   return (
@@ -28,9 +28,9 @@ export default function DashboardHeader() {
         <nav className="ml-2 mr-2 flex shrink-0 items-center gap-1 sm:gap-2">
           <AlertCircle className="h-3 w-3 text-blue-600/80 sm:h-4 sm:w-4 md:h-5 md:w-5" />
 
-          <span className="text-[9px] font-medium text-blue-600/80 sm:text-[10px] md:text-xs lg:text-sm">
+          <Link to="/about" className="text-sm font-medium text-slate-600 hover:text-blue-600">
             Sobre os dados
-          </span>
+          </Link>
         </nav>
       </div>
     </header>
