@@ -194,12 +194,6 @@ Configure o arquivo `.env`.
 DATABASE_URL="..."
 ```
 
-Execute as migrações.
-
-```bash
-npx prisma migrate dev
-```
-
 Inicie o servidor.
 
 ```bash
@@ -235,7 +229,7 @@ npm run dev
 Após iniciar o backend, a documentação poderá ser acessada pelo Swagger.
 
 ```text
-http://localhost:3000/api-docs
+http://localhost:3333/api-docs
 ```
 
 ---
