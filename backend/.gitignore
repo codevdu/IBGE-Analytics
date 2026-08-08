@@ -1,7 +1,4 @@
 node_modules
-package-lock.json
-dist
-build
-
-# ignore environment variables
 .env
+package-lock.json
+/dist

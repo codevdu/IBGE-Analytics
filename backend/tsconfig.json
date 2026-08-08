@@ -1,20 +1,14 @@
 {
   "compilerOptions": {
-    /* Configuração ESM nativa */
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    
-    /* Saída de build */
-    "outDir": "./dist",
     "rootDir": "./src",
-
-    /* Tipagens e checagem */
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "skipLibCheck": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"]
 }
