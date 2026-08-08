@@ -1,10 +1,10 @@
-import { Router } from "express"
-import { statesRoutes } from "./states-routes"
-import { dashboardRoutes } from "./dashboard-routes" 
+import { Router } from 'express';
+import { authRoutes } from './auth.routes.js';
+import { dashboardRoutes } from './dashboard.routes.js';
 
-const routes = Router()
+const routes = Router();
 
-routes.use("/api/states", statesRoutes)
-routes.use("/api/dashboard", dashboardRoutes)
+routes.use('/auth', authRoutes);
+routes.use('/api', dashboardRoutes);
 
-export { routes }
+export { routes };
