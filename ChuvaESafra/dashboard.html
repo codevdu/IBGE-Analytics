@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Técnico - Cooperativa</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#121214',
+                        cardbg: '#1a1d1e',
+                        brandgreen: '#00e676',
+                        bordergray: '#2d3748'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        /* Personalização da barra de rolagem */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #121214; }
+        ::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-darkbg text-gray-400 h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-darkbg border-r border-bordergray flex flex-col justify-between p-4 hidden md:flex">
+        <div>
+            <div class="mb-8">
+                <h1 class="text-brandgreen font-bold text-lg">Chuva e Safra</h1>
+                <p class="text-xs text-gray-500">Precision Intelligence</p>
+            </div>
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center gap-3 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 hover:bg-cardbg rounded-lg text-sm">
+                    <span>🌱</span> Soils
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 hover:bg-cardbg rounded-lg text-sm">
+                    <span>☁️</span> Forecast
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 hover:bg-cardbg rounded-lg text-sm">
+                    <span>🚜</span> Crop Management
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 hover:bg-cardbg rounded-lg text-sm">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+            
+            <div class="mt-8">
+                <p class="text-xs font-semibold text-gray-500 mb-4 px-4">MUNICIPALITIES</p>
+                <ul class="space-y-2 text-sm px-4">
+                    <li class="flex items-center justify-between">Mato Grosso <span class="w-2 h-2 rounded-full bg-green-500"></span></li>
+                    <li class="flex items-center justify-between">Rio Verde <span class="w-2 h-2 rounded-full bg-blue-500"></span></li>
+                    <li class="flex items-center justify-between">Sorriso <span class="w-2 h-2 rounded-full bg-yellow-500"></span></li>
+                    <li class="flex items-center justify-between">Querência <span class="w-2 h-2 rounded-full bg-purple-500"></span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="space-y-2 text-sm px-4">
+            <a href="#" class="flex items-center gap-3 hover:text-white"><span>❓</span> Help Center</a>
+            <a href="#" class="flex items-center gap-3 hover:text-white"><span>📡</span> System Status</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <!-- Header -->
+        <header class="flex justify-between items-center p-6 bg-darkbg sticky top-0 z-10">
+            <h2 class="text-2xl font-bold text-brandgreen">Overview</h2>
+            <div class="flex items-center gap-4">
+                <input type="text" placeholder="Search data points..." class="bg-cardbg border border-bordergray rounded-full px-4 py-1.5 text-sm focus:outline-none focus:border-brandgreen">
+                <div class="w-8 h-8 bg-gray-600 rounded-full"></div>
+            </div>
+        </header>
+
+        <div class="p-6 space-y-6">
+            <!-- Top Metric Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-cardbg p-4 rounded-xl border border-bordergray">
+                    <p class="text-xs text-gray-500 mb-1">AVG RAIN DAYS</p>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl text-white font-bold">124.5</span>
+                        <span class="text-xs text-brandgreen">+1.2%</span>
+                    </div>
+                </div>
+                <div class="bg-cardbg p-4 rounded-xl border border-bordergray">
+                    <p class="text-xs text-gray-500 mb-1">PRODUCTIVITY INDEX</p>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl text-white font-bold">92.1%</span>
+                        <span class="text-xs text-brandgreen">+4.5%</span>
+                    </div>
+                </div>
+                <div class="bg-cardbg p-4 rounded-xl border border-bordergray">
+                    <p class="text-xs text-gray-500 mb-1">ACTIVE SENSORS</p>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl text-white font-bold">1,024</span>
+                        <span class="text-xs text-red-500">-0.2%</span>
+                    </div>
+                </div>
+                <div class="bg-cardbg p-4 rounded-xl border border-bordergray">
+                    <p class="text-xs text-gray-500 mb-1">YIELD EST. (TON/HA)</p>
+                    <div class="flex items-end justify-between">
+                        <span class="text-2xl text-white font-bold">8.4</span>
+                        <span class="text-xs text-brandgreen">+2.7%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Scatter Plot -->
+                <div class="lg:col-span-2 bg-cardbg p-5 rounded-xl border border-bordergray relative h-80">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-white text-sm font-semibold">Rainfall vs Productivity Analysis</h3>
+                            <p class="text-xs text-gray-500">Cross-municipality performance tracking</p>
+                        </div>
+                        <select class="bg-darkbg border border-bordergray text-xs px-2 py-1 rounded">
+                            <option>Last 30 days</option>
+                        </select>
+                    </div>
+                    <div class="relative h-56 w-full">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Radial Chart -->
+                <div class="bg-cardbg p-5 rounded-xl border border-bordergray h-80 flex flex-col items-center">
+                    <h3 class="text-white text-sm font-semibold self-start mb-4">TRAFFIC BY REGION</h3>
+                    <div class="relative h-40 w-40 flex-1">
+                        <canvas id="doughnutChart"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl text-white font-bold">64%</span>
+                            <span class="text-[10px]">Optimal Zone</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Municipality Table -->
+            <div class="bg-cardbg border border-bordergray rounded-xl overflow-hidden">
+                <div class="p-4 flex justify-between items-center border-b border-bordergray">
+                    <h3 class="text-white text-sm font-semibold">Municipality Breakdown</h3>
+                    <div class="flex gap-2">
+                        <button class="border border-brandgreen text-brandgreen hover:bg-brandgreen hover:text-darkbg px-3 py-1.5 text-xs rounded transition flex items-center gap-2">
+                            <span>📥</span> Export CSV
+                        </button>
+                        <button class="border border-brandgreen text-brandgreen hover:bg-brandgreen hover:text-darkbg px-3 py-1.5 text-xs rounded transition flex items-center gap-2">
+                            <span>📄</span> Export PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="text-xs text-gray-500 bg-darkbg border-b border-bordergray">
+                            <tr>
+                                <th class="px-6 py-3 font-medium">MUNICIPALITY</th>
+                                <th class="px-6 py-3 font-medium">RAINFALL (MM)</th>
+                                <th class="px-6 py-3 font-medium">TEMP (AVG)</th>
+                                <th class="px-6 py-3 font-medium">PRODUCTIVITY INDEX</th>
+                                <th class="px-6 py-3 font-medium">SOIL MOISTURE</th>
+                                <th class="px-6 py-3 font-medium">STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-bordergray">
+                            <tr class="hover:bg-gray-800/50">
+                                <td class="px-6 py-4 text-gray-300">Mato Grosso</td>
+                                <td class="px-6 py-4">134.5</td>
+                                <td class="px-6 py-4">28.4°C</td>
+                                <td class="px-6 py-4 text-brandgreen">0.92</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-brandgreen h-1.5 rounded-full" style="width: 90%"></div></div>
+                                </td>
+                                <td class="px-6 py-4"><span class="text-xs border border-brandgreen text-brandgreen px-2 py-0.5 rounded">OPTIMAL</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/50">
+                                <td class="px-6 py-4 text-gray-300">Rio Verde</td>
+                                <td class="px-6 py-4">142.2</td>
+                                <td class="px-6 py-4">26.7°C</td>
+                                <td class="px-6 py-4 text-brandgreen">0.90</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-brandgreen h-1.5 rounded-full" style="width: 85%"></div></div>
+                                </td>
+                                <td class="px-6 py-4"><span class="text-xs border border-brandgreen text-brandgreen px-2 py-0.5 rounded">OPTIMAL</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/50">
+                                <td class="px-6 py-4 text-gray-300">Sorriso</td>
+                                <td class="px-6 py-4">198.8</td>
+                                <td class="px-6 py-4">25.5°C</td>
+                                <td class="px-6 py-4 text-blue-400">0.85</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-blue-400 h-1.5 rounded-full" style="width: 100%"></div></div>
+                                </td>
+                                <td class="px-6 py-4"><span class="text-xs border border-blue-400 text-blue-400 px-2 py-0.5 rounded">SATURATED</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/50">
+                                <td class="px-6 py-4 text-gray-300">Querência</td>
+                                <td class="px-6 py-4">62.1</td>
+                                <td class="px-6 py-4">31.2°C</td>
+                                <td class="px-6 py-4 text-orange-400">0.54</td>
+                                <td class="px-6 py-4">
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5"><div class="bg-orange-400 h-1.5 rounded-full" style="width: 30%"></div></div>
+                                </td>
+                                <td class="px-6 py-4"><span class="text-xs border border-orange-400 text-orange-400 px-2 py-0.5 rounded">CRITICAL</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Footer text -->
+            <div class="flex justify-between text-xs text-gray-600 pb-4">
+                <span>© 2024 Chuva e Safra. Intelligence for the field.</span>
+                <div class="space-x-4">
+                    <a href="#" class="hover:text-gray-400">Privacy Policy</a>
+                    <a href="#" class="hover:text-gray-400">Terms of Service</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts dos Gráficos -->
+    <script>
+        // Configuração Global Chart.js para Dark Mode
+        Chart.defaults.color = '#718096';
+        Chart.defaults.borderColor = '#2d3748';
+
+        // Gráfico de Dispersão (Scatter)
+        const ctxScatter = document.getElementById('scatterChart').getContext('2d');
+        new Chart(ctxScatter, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Municípios',
+                    data: [
+                        {x: 60, y: 0.5}, {x: 130, y: 0.9}, {x: 140, y: 0.92}, 
+                        {x: 180, y: 0.6}, {x: 200, y: 0.8}
+                    ],
+                    backgroundColor: ['#f97316', '#10b981', '#3b82f6', '#a855f7', '#eab308'],
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'RAINFALL (MM)', font: { size: 10 } },
+                        grid: { color: '#2d3748' }
+                    },
+                    y: {
+                        title: { display: true, text: 'PRODUCTIVITY INDEX', font: { size: 10 } },
+                        grid: { color: '#2d3748' }
+                    }
+                }
+            }
+        });
+
+        // Gráfico Circular (Doughnut)
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Optimal', 'Warning', 'Critical'],
+                datasets: [{
+                    data: [64, 24, 12],
+                    backgroundColor: ['#00e676', '#1a1d1e', '#2d3748'],
+                    borderWidth: 0,
+                    cutout: '80%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+</body>
+</html>
